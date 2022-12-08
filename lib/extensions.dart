@@ -19,4 +19,21 @@ extension StringExtensions on String {
         return 0;
     }
   }
+
+  /// A X - Rock
+  /// B Y - Paper
+  /// C Z - Scissor
+  bool rockPaperScissorWon(String other) {
+    switch (this) {
+      case 'A':
+        return other == 'Z' ? true : false;
+      case 'B':
+        return other == 'X' ? true : false;
+      case 'C':
+        return other == 'Y' ? true : false;
+
+      default:
+        return false;
+    }
+  }
 }

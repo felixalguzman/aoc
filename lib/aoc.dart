@@ -57,25 +57,22 @@ void day22022() {
   final lines = fileContent.split('\n');
   for (int i = 0; i < lines.length; i++) {
     final line = lines[i];
+    if (line.isEmpty || line.length <= 1) {
+      continue;
+    }
+
     final moves = line.split(' ');
 
     final oppMove = moves[0].paperScissorPoint();
     final playerMove = moves[1].trim().paperScissorPoint();
 
-    if (playerMove > oppMove) {
-      playerGuide
-          .add(StrategyGuide(round: i, won: true, points: 6 + playerMove));
-      opponentGuide.add(StrategyGuide(
-          round: i,
-          won: false,
-          points: (oppMove > playerMove ? 0 : 3) + oppMove));
-    } else {
-      playerGuide.add(StrategyGuide(
-          round: i,
-          won: false,
-          points: (oppMove > playerMove ? 0 : 3) + playerMove));
-      opponentGuide.add(StrategyGuide(round: i, won: true, points: oppMove));
-    }
+    final won = oppMove == playerMove
+        ? false
+        : !moves[0].rockPaperScissorWon(moves[1].trim());
+
+    final roundPoints = won ? 6 : (oppMove == playerMove ? 3 : 0);
+    playerGuide.add(
+        StrategyGuide(round: i, won: won, points: roundPoints + playerMove));
   }
 
   final playerPoints = playerGuide.map((e) => e.points).toList();
