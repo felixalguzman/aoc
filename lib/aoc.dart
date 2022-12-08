@@ -53,7 +53,7 @@ void day22022() {
   final fileContent = File('./assets/sources/2022/2.txt').readAsStringSync();
 
   final playerGuide = <StrategyGuide>[];
-  final opponentGuide = <StrategyGuide>[];
+  final secondPlayerGuide = <StrategyGuide>[];
   final lines = fileContent.split('\n');
   for (int i = 0; i < lines.length; i++) {
     final line = lines[i];
@@ -68,17 +68,46 @@ void day22022() {
 
     final won = oppMove == playerMove
         ? false
-        : !moves[0].rockPaperScissorWon(moves[1].trim());
+        : !moves[0].rockPaperScissor(moves[1].trim());
 
     final roundPoints = won ? 6 : (oppMove == playerMove ? 3 : 0);
     playerGuide.add(
         StrategyGuide(round: i, won: won, points: roundPoints + playerMove));
+
+    switch (moves[1].trim()) {
+      case 'X':
+        final toLoose = moves[1]
+            .trim()
+            .findCharToLoose(moves[0].trim())
+            .paperScissorPoint();
+
+        secondPlayerGuide
+            .add(StrategyGuide(round: i, won: won, points: 0 + toLoose));
+
+        break;
+      case 'Y':
+        secondPlayerGuide
+            .add(StrategyGuide(round: i, won: won, points: 3 + oppMove));
+
+        break;
+      case 'Z':
+        final toWin =
+            moves[1].trim().findCharToWin(moves[0].trim()).paperScissorPoint();
+        secondPlayerGuide
+            .add(StrategyGuide(round: i, won: won, points: 6 + toWin));
+
+        break;
+      default:
+        continue;
+    }
   }
 
   final playerPoints = playerGuide.map((e) => e.points).toList();
-  final opponentsPoints = opponentGuide.map((e) => e.points).toList();
+  print('Part 1');
   print('Player points: ${playerPoints.sum} ');
-  print('Opponent points: ${opponentsPoints.sum} ');
+  print('Part 2');
+  final secondPlayerPoints = secondPlayerGuide.map((e) => e.points).toList();
+  print('Player points: ${secondPlayerPoints.sum} ');
 }
 
 class StrategyGuide {

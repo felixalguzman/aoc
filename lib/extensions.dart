@@ -23,17 +23,65 @@ extension StringExtensions on String {
   /// A X - Rock
   /// B Y - Paper
   /// C Z - Scissor
-  bool rockPaperScissorWon(String other) {
+  bool rockPaperScissor(String other, [bool toWin = true]) {
     switch (this) {
       case 'A':
-        return other == 'Z' ? true : false;
+        return toWin
+            ? other == 'Z'
+            : other == 'Y'
+                ? true
+                : false;
       case 'B':
-        return other == 'X' ? true : false;
+        return toWin
+            ? other == 'X'
+            : other == 'Z'
+                ? true
+                : false;
       case 'C':
-        return other == 'Y' ? true : false;
+        return toWin
+            ? other == 'Y'
+            : other == 'X'
+                ? true
+                : false;
 
       default:
         return false;
     }
+  }
+
+  ///Get the next char
+  String get nextChar => String.fromCharCode(codeUnitAt(0) + 1);
+
+  String findCharToWin(String opponent) {
+    var won = false;
+    var char = 'X';
+    while (!won) {
+      final win = !opponent.rockPaperScissor(char);
+      if (win && char != this) {
+        won = true;
+        // char = 'X';
+      } else {
+        char = char.nextChar;
+      }
+    }
+
+    return char;
+  }
+
+  String findCharToLoose(String opponent) {
+    var won = true;
+    var char = 'X';
+    while (!won) {
+      final win = !opponent.rockPaperScissor(char, false);
+      if (win && char != this) {
+        won = true;
+        // char = 'X';
+
+      } else {
+        char = char.nextChar;
+      }
+    }
+
+    return char;
   }
 }
