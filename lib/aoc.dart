@@ -10,6 +10,9 @@ void resolve(int day, [int year = 2022]) {
     case 1:
       day12022();
       break;
+    case 2:
+      day22022();
+      break;
     default:
   }
 }
@@ -44,4 +47,47 @@ void day12022() {
 
   final total = top3.map((e) => e.value.sum).toList().sum;
   print('Total: $total');
+}
+
+void day22022() {
+  final fileContent = File('./assets/sources/2022/2.txt').readAsStringSync();
+
+  final playerGuide = <StrategyGuide>[];
+  final opponentGuide = <StrategyGuide>[];
+  final lines = fileContent.split('\n');
+  for (int i = 0; i < lines.length; i++) {
+    final line = lines[i];
+    final moves = line.split(' ');
+
+    final oppMove = moves[0].paperScissorPoint();
+    final playerMove = moves[1].trim().paperScissorPoint();
+
+    if (playerMove > oppMove) {
+      playerGuide
+          .add(StrategyGuide(round: i, won: true, points: 6 + playerMove));
+      opponentGuide.add(StrategyGuide(
+          round: i,
+          won: false,
+          points: (oppMove > playerMove ? 0 : 3) + oppMove));
+    } else {
+      playerGuide.add(StrategyGuide(
+          round: i,
+          won: false,
+          points: (oppMove > playerMove ? 0 : 3) + playerMove));
+      opponentGuide.add(StrategyGuide(round: i, won: true, points: oppMove));
+    }
+  }
+
+  final playerPoints = playerGuide.map((e) => e.points).toList();
+  final opponentsPoints = opponentGuide.map((e) => e.points).toList();
+  print('Player points: ${playerPoints.sum} ');
+  print('Opponent points: ${opponentsPoints.sum} ');
+}
+
+class StrategyGuide {
+  final bool won;
+  final int round;
+  final int points;
+
+  StrategyGuide({required this.round, required this.won, required this.points});
 }
