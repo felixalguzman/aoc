@@ -34,19 +34,14 @@ void day12022() {
     }
   }
 
-  var biggestIndex = -1;
-  for (final group in elfs.entries) {
-    if (biggestIndex == -1) {
-      biggestIndex = group.key;
-      continue;
-    }
+  final sorted = elfs.entries.toList();
+  sorted.sort((a, b) => a.value.sum.compareTo(b.value.sum));
 
-    final previousBiggest = elfs[biggestIndex]?.sum ?? 0;
-
-    final currentBiggest = group.value.sum;
-    if (currentBiggest > previousBiggest) {
-      biggestIndex = group.key;
-    }
+  final top3 = sorted.reversed.take(3);
+  for (final element in top3) {
+    print('Elfo ${element.key} cal: ${element.value.sum}');
   }
-  print('Mayor elfo ${biggestIndex + 1} con ${elfs[biggestIndex]!.sum}');
+
+  final total = top3.map((e) => e.value.sum).toList().sum;
+  print('Total: $total');
 }
