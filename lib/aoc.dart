@@ -135,8 +135,42 @@ void day32022() {
 
     itemTypes.add(copy);
   }
+  final firstPartTotal = itemTypes.map((e) => e['points'] ?? 0).toList().sum;
+  print('Total part 1: $firstPartTotal');
+
+  itemTypes.clear();
+  for (var i = 0; i < lines.length; i += 3) {
+    final parts = lines.skip(i).map((e) => e.trim()).take(3).toList();
+
+    final copy = <String, int>{};
+    if (parts.length == 3) {
+      final first = parts.first;
+      final second = parts[1];
+      final third = parts.last;
+
+      final result = [first, second, third]
+          .map((e) => e.codeUnits)
+          .expand((element) => element)
+          .toSet()
+          .toList();
+
+      result.retainWhere((element) => first.codeUnits.contains(element));
+      result.retainWhere((element) => second.codeUnits.contains(element));
+      result.retainWhere((element) => third.codeUnits.contains(element));
+
+      final chars = result.map((e) => String.fromCharCode(e)).toList();
+
+      for (final char in chars) {
+        final pointDiff = char.isLowerCase ? 96 : 38;
+        final points = char.codeUnitAt(0) - pointDiff;
+        copy.update('points', (value) => value + points,
+            ifAbsent: () => points);
+      }
+      itemTypes.add(copy);
+    }
+  }
   final total = itemTypes.map((e) => e['points'] ?? 0).toList().sum;
-  print('Total: $total');
+  print('Total part 2: $total');
 }
 
 class StrategyGuide {
