@@ -13,6 +13,9 @@ void resolve(int day, [int year = 2022]) {
     case 2:
       day22022();
       break;
+    case 3:
+      day32022();
+      break;
     default:
   }
 }
@@ -108,6 +111,66 @@ void day22022() {
   print('Part 2');
   final secondPlayerPoints = secondPlayerGuide.map((e) => e.points).toList();
   print('Player points: ${secondPlayerPoints.sum} ');
+}
+
+typedef Dic = Map<String, int>;
+void day32022() {
+  final fileContent = File('./assets/sources/2022/3.txt').readAsStringSync();
+
+  final lines = fileContent.split('\n');
+  final itemTypes = <Dic>[];
+  for (var i = 0; i < lines.length; i++) {
+    final line = lines[i].trim();
+    final half = line.length ~/ 2;
+    final firstPart = line.substring(0, half);
+    final secondPart = line.substring(half);
+
+    final countChars = firstPart.countChars(secondPart);
+    final copy = Map<String, int>.from(countChars);
+    countChars.forEach((key, value) {
+      final pointDiff = key.isLowerCase ? 96 : 38;
+      final points = key.codeUnitAt(0) - pointDiff;
+      copy.update('points', (value) => value + points, ifAbsent: () => points);
+    });
+
+    itemTypes.add(copy);
+  }
+  final firstPartTotal = itemTypes.map((e) => e['points'] ?? 0).toList().sum;
+  print('Total part 1: $firstPartTotal');
+
+  itemTypes.clear();
+  for (var i = 0; i < lines.length; i += 3) {
+    final parts = lines.skip(i).map((e) => e.trim()).take(3).toList();
+
+    final copy = <String, int>{};
+    if (parts.length == 3) {
+      final first = parts.first;
+      final second = parts[1];
+      final third = parts.last;
+
+      final result = [first, second, third]
+          .map((e) => e.codeUnits)
+          .expand((element) => element)
+          .toSet()
+          .toList();
+
+      result.retainWhere((element) => first.codeUnits.contains(element));
+      result.retainWhere((element) => second.codeUnits.contains(element));
+      result.retainWhere((element) => third.codeUnits.contains(element));
+
+      final chars = result.map((e) => String.fromCharCode(e)).toList();
+
+      for (final char in chars) {
+        final pointDiff = char.isLowerCase ? 96 : 38;
+        final points = char.codeUnitAt(0) - pointDiff;
+        copy.update('points', (value) => value + points,
+            ifAbsent: () => points);
+      }
+      itemTypes.add(copy);
+    }
+  }
+  final total = itemTypes.map((e) => e['points'] ?? 0).toList().sum;
+  print('Total part 2: $total');
 }
 
 class StrategyGuide {

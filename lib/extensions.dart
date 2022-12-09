@@ -1,3 +1,5 @@
+import 'package:aoc/aoc.dart';
+
 extension ListExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
 }
@@ -72,4 +74,28 @@ extension StringExtensions on String {
 
   String findCharToLoose(String opponent) =>
       mapRockPaperScissor(opponent, false);
+
+  Dic countChars(String other) {
+    final map = <String, int>{};
+
+    final firstRunes = runes.map((e) => e).toList();
+    final secondRunes = other.runes.map((e) => e).toList();
+
+    firstRunes.retainWhere((element) => secondRunes.contains(element));
+
+    for (final rune in firstRunes) {
+      map.update(
+        String.fromCharCode(rune),
+        (old) => old++,
+        ifAbsent: () => 1,
+      );
+    }
+
+    return map;
+  }
+
+  bool get isLowerCase =>
+      runes.isNotEmpty &&
+      runes.first >= 97 &&
+      runes.first <= 122;
 }
