@@ -183,6 +183,7 @@ void day42022() {
       fileContent.split('\n').map((e) => e.trim().split(',').toList()).toList();
 
   var count = 0;
+  var countPart2 = 0;
   for (final pair in pairs) {
     final firstPart = pair.first.split('-').map((e) => int.parse(e)).toList();
     final secondPart = pair.last.split('-').map((e) => int.parse(e)).toList();
@@ -197,9 +198,15 @@ void day42022() {
         firstRange.every((element) => secondRange.contains(element))) {
       count++;
     }
+
+     if (secondRange.any((element) => firstRange.contains(element)) ||
+        firstRange.any((element) => secondRange.contains(element))) {
+      countPart2++;
+    }
   }
 
-  print('cantidad : $count');
+  print('Part 1: $count');
+  print('Part 2: $countPart2');
 }
 
 class StrategyGuide {
