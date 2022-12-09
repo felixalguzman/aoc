@@ -74,8 +74,8 @@ void day22022() {
     playerGuide.add(
         StrategyGuide(round: i, won: won, points: roundPoints + playerMove));
 
-    switch (moves[1].trim()) {
-      case 'X':
+    switch (playerMove) {
+      case 1:
         final toLoose = moves[1]
             .trim()
             .findCharToLoose(moves[0].trim())
@@ -85,12 +85,12 @@ void day22022() {
             .add(StrategyGuide(round: i, won: won, points: 0 + toLoose));
 
         break;
-      case 'Y':
+      case 2:
         secondPlayerGuide
             .add(StrategyGuide(round: i, won: won, points: 3 + oppMove));
 
         break;
-      case 'Z':
+      case 3:
         final toWin =
             moves[1].trim().findCharToWin(moves[0].trim()).paperScissorPoint();
         secondPlayerGuide

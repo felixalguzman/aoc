@@ -49,39 +49,27 @@ extension StringExtensions on String {
     }
   }
 
+  /// A X - Rock
+  /// B Y - Paper
+  /// C Z - Scissor
+  String mapRockPaperScissor(String other, [bool toWin = true]) {
+    switch (other) {
+      case 'A':
+        return !toWin ? 'Z' : 'Y';
+      case 'B':
+        return !toWin ? 'X' : 'Z';
+      case 'C':
+        return !toWin ? 'Y' : 'X';
+      default:
+        return '';
+    }
+  }
+
   ///Get the next char
   String get nextChar => String.fromCharCode(codeUnitAt(0) + 1);
 
-  String findCharToWin(String opponent) {
-    var won = false;
-    var char = 'X';
-    while (!won) {
-      final win = !opponent.rockPaperScissor(char);
-      if (win && char != this) {
-        won = true;
-        // char = 'X';
-      } else {
-        char = char.nextChar;
-      }
-    }
+  String findCharToWin(String opponent) => mapRockPaperScissor(opponent);
 
-    return char;
-  }
-
-  String findCharToLoose(String opponent) {
-    var won = true;
-    var char = 'X';
-    while (!won) {
-      final win = !opponent.rockPaperScissor(char, false);
-      if (win && char != this) {
-        won = true;
-        // char = 'X';
-
-      } else {
-        char = char.nextChar;
-      }
-    }
-
-    return char;
-  }
+  String findCharToLoose(String opponent) =>
+      mapRockPaperScissor(opponent, false);
 }
