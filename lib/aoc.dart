@@ -16,6 +16,9 @@ void resolve(int day, [int year = 2022]) {
     case 3:
       day32022();
       break;
+    case 4:
+      day42022();
+      break;
     default:
   }
 }
@@ -171,6 +174,32 @@ void day32022() {
   }
   final total = itemTypes.map((e) => e['points'] ?? 0).toList().sum;
   print('Total part 2: $total');
+}
+
+void day42022() {
+  final fileContent = File('./assets/sources/2022/4.txt').readAsStringSync();
+
+  final pairs =
+      fileContent.split('\n').map((e) => e.trim().split(',').toList()).toList();
+
+  var count = 0;
+  for (final pair in pairs) {
+    final firstPart = pair.first.split('-').map((e) => int.parse(e)).toList();
+    final secondPart = pair.last.split('-').map((e) => int.parse(e)).toList();
+
+    final firstRange = List.generate((firstPart.last - firstPart.first) + 1,
+        (index) => index + firstPart.first).toList();
+
+    final secondRange = List.generate((secondPart.last - secondPart.first) + 1,
+        (index) => index + secondPart.first).toList();
+
+    if (secondRange.every((element) => firstRange.contains(element)) ||
+        firstRange.every((element) => secondRange.contains(element))) {
+      count++;
+    }
+  }
+
+  print('cantidad : $count');
 }
 
 class StrategyGuide {
