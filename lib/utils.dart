@@ -3,6 +3,8 @@ class Stack<E> {
 
   Stack.of(Iterable<E> elements) : _items = List<E>.of(elements);
 
+  Stack.clone(Stack<E> old) : _items = List.of(old._items);
+
   final List<E> _items;
 
   void push(E element) => _items.add(element);
@@ -20,6 +22,8 @@ class Stack<E> {
     _items.clear();
     _items.addAll(reverse);
   }
+
+  void clear() => _items.clear();
 
   @override
   String toString() {

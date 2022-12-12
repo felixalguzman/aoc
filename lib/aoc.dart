@@ -254,11 +254,7 @@ void day52022() {
     stack.reverse();
   }
 
-  for (int k = 0; k < stacks.length; k++) {
-    var stack = stacks[k];
-    print('col: ${k + 1}');
-    print(stack.toString());
-  }
+  final initialState = stacks.map((e) => Stack.clone(e)).toList();
 
   for (final move in moves) {
     final parts = move.split('from');
@@ -282,11 +278,46 @@ void day52022() {
     stacks[to] = toStack;
   }
 
-  for (int k = 0; k < stacks.length; k++) {
-    var stack = stacks[k];
-    print('col: ${k + 1}');
-    print(stack.peek);
+  print('Part 1:');
+  final part1 = stacks.map((e) => e.peek).join('');
+  print(part1);
+
+  stacks.map((e) => e.clear());
+  stacks.clear();
+  stacks.addAll(initialState);
+
+  for (final move in moves) {
+    final parts = move.split('from');
+    final amount = parts.first.replaceAll('move', '').trim();
+    final amountNumber = int.parse(amount);
+
+    final fromTo = parts.last.split('to').map((e) => e.trim()).toList();
+    final from = int.parse(fromTo.first) - 1;
+    final to = int.parse(fromTo.last) - 1;
+
+    final fromStack = stacks[from];
+    final toStack = stacks[to];
+
+    final toPush = <String>[];
+    for (var i = 0; i < amountNumber; i++) {
+      if (fromStack.isNotEmpty) {
+        final last = fromStack.pop();
+        toPush.add(last);
+      }
+    }
+
+    for (var element in toPush.reversed) {
+      toStack.push(element);
+    }
+
+    stacks[from] = fromStack;
+    stacks[to] = toStack;
   }
+
+  print('Part 2:');
+  final part2 =
+      stacks.where((element) => element.isNotEmpty).map((e) => e.peek).join('');
+  print(part2);
 }
 
 class StrategyGuide {
