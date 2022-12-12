@@ -15,6 +15,12 @@ class Stack<E> {
 
   bool get isNotEmpty => !isEmpty;
 
+  void reverse() {
+    final reverse = _items.reversed.toList();
+    _items.clear();
+    _items.addAll(reverse);
+  }
+
   @override
   String toString() {
     return '--- Top ---\n'

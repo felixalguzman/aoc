@@ -217,6 +217,7 @@ void day52022() {
   final fileContent = File('./assets/sources/2022/5.txt').readAsStringSync();
   final lines = fileContent.split('\n').toList();
 
+  final moves = <String>[];
   final drawing = <String>[];
   final stacks = <Stack<String>>[];
   for (var i = 0; i < lines.length; i++) {
@@ -244,13 +245,48 @@ void day52022() {
         }
       }
       currentStack = 0;
+    } else if (line.trim().contains('move')) {
+      moves.add(line);
     }
+  }
+
+  for (var stack in stacks) {
+    stack.reverse();
   }
 
   for (int k = 0; k < stacks.length; k++) {
     var stack = stacks[k];
-    print('col: $k');
+    print('col: ${k + 1}');
     print(stack.toString());
+  }
+
+  for (final move in moves) {
+    final parts = move.split('from');
+    final amount = parts.first.replaceAll('move', '').trim();
+    final amountNumber = int.parse(amount);
+
+    final fromTo = parts.last.split('to').map((e) => e.trim()).toList();
+    final from = int.parse(fromTo.first) - 1;
+    final to = int.parse(fromTo.last) - 1;
+
+    print('amount $amountNumber from $from to $to');
+    final fromStack = stacks[from];
+    final toStack = stacks[to];
+
+    for (var i = 0; i < amountNumber; i++) {
+      if (fromStack.isNotEmpty) {
+        final last = fromStack.pop();
+        toStack.push(last);
+      }
+    }
+    stacks[from] = fromStack;
+    stacks[to] = toStack;
+  }
+
+  for (int k = 0; k < stacks.length; k++) {
+    var stack = stacks[k];
+    print('col: ${k + 1}');
+    print(stack.peek);
   }
 }
 
