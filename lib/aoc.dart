@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:aoc/extensions.dart';
+import 'package:aoc/utils.dart';
 
 int calculate() {
   return 6 * 7;
@@ -18,6 +19,9 @@ void resolve(int day, [int year = 2022]) {
       break;
     case 4:
       day42022();
+      break;
+    case 5:
+      day52022();
       break;
     default:
   }
@@ -199,7 +203,7 @@ void day42022() {
       count++;
     }
 
-     if (secondRange.any((element) => firstRange.contains(element)) ||
+    if (secondRange.any((element) => firstRange.contains(element)) ||
         firstRange.any((element) => secondRange.contains(element))) {
       countPart2++;
     }
@@ -207,6 +211,113 @@ void day42022() {
 
   print('Part 1: $count');
   print('Part 2: $countPart2');
+}
+
+void day52022() {
+  final fileContent = File('./assets/sources/2022/5.txt').readAsStringSync();
+  final lines = fileContent.split('\n').toList();
+
+  final moves = <String>[];
+  final drawing = <String>[];
+  final stacks = <Stack<String>>[];
+  for (var i = 0; i < lines.length; i++) {
+    final line = lines[i];
+    if (line.contains('[') || line.contains(']')) {
+      var currentStack = 0;
+      drawing.add(line);
+
+      final lineGroups = line.length ~/ 4;
+      if (stacks.isEmpty && lineGroups > 0) {
+        stacks.addAll(List.generate(lineGroups, (index) => Stack()));
+      }
+
+      for (var j = 0; j < line.length; j += 4) {
+        final current = line.split('').skip(j).take(4).join('').trim();
+        if (current.isEmpty) {
+          currentStack++;
+          continue;
+        }
+
+        if (current.startsWith('[') && current.endsWith(']')) {
+          stacks[currentStack]
+              .push(current.replaceAll('[', '').replaceAll(']', ''));
+          currentStack++;
+        }
+      }
+      currentStack = 0;
+    } else if (line.trim().contains('move')) {
+      moves.add(line);
+    }
+  }
+
+  for (var stack in stacks) {
+    stack.reverse();
+  }
+
+  final initialState = stacks.map((e) => Stack.clone(e)).toList();
+
+  for (final move in moves) {
+    final parts = move.split('from');
+    final amount = parts.first.replaceAll('move', '').trim();
+    final amountNumber = int.parse(amount);
+
+    final fromTo = parts.last.split('to').map((e) => e.trim()).toList();
+    final from = int.parse(fromTo.first) - 1;
+    final to = int.parse(fromTo.last) - 1;
+
+    final fromStack = stacks[from];
+    final toStack = stacks[to];
+
+    for (var i = 0; i < amountNumber; i++) {
+      if (fromStack.isNotEmpty) {
+        final last = fromStack.pop();
+        toStack.push(last);
+      }
+    }
+    stacks[from] = fromStack;
+    stacks[to] = toStack;
+  }
+
+  print('Part 1:');
+  final part1 = stacks.map((e) => e.peek).join('');
+  print(part1);
+
+  stacks.map((e) => e.clear());
+  stacks.clear();
+  stacks.addAll(initialState);
+
+  for (final move in moves) {
+    final parts = move.split('from');
+    final amount = parts.first.replaceAll('move', '').trim();
+    final amountNumber = int.parse(amount);
+
+    final fromTo = parts.last.split('to').map((e) => e.trim()).toList();
+    final from = int.parse(fromTo.first) - 1;
+    final to = int.parse(fromTo.last) - 1;
+
+    final fromStack = stacks[from];
+    final toStack = stacks[to];
+
+    final toPush = <String>[];
+    for (var i = 0; i < amountNumber; i++) {
+      if (fromStack.isNotEmpty) {
+        final last = fromStack.pop();
+        toPush.add(last);
+      }
+    }
+
+    for (var element in toPush.reversed) {
+      toStack.push(element);
+    }
+
+    stacks[from] = fromStack;
+    stacks[to] = toStack;
+  }
+
+  print('Part 2:');
+  final part2 =
+      stacks.where((element) => element.isNotEmpty).map((e) => e.peek).join('');
+  print(part2);
 }
 
 class StrategyGuide {
