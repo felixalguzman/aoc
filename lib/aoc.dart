@@ -269,7 +269,6 @@ void day52022() {
     final from = int.parse(fromTo.first) - 1;
     final to = int.parse(fromTo.last) - 1;
 
-    print('amount $amountNumber from $from to $to');
     final fromStack = stacks[from];
     final toStack = stacks[to];
 
