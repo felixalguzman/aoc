@@ -23,6 +23,9 @@ void resolve(int day, [int year = 2022]) {
     case 5:
       day52022();
       break;
+    case 6:
+      day62022();
+      break;
     default:
   }
 }
@@ -318,6 +321,46 @@ void day52022() {
   final part2 =
       stacks.where((element) => element.isNotEmpty).map((e) => e.peek).join('');
   print(part2);
+}
+
+void day62022() {
+  final fileContent = File('./assets/sources/2022/6.txt').readAsStringSync();
+
+  final chars = fileContent.split('').toList();
+  final previous = <String>[];
+  for (var i = 0; i < chars.length; i++) {
+    final current = chars[i];
+    if (previous.length <= 4) {
+      previous.add(current);
+      continue;
+    }
+
+    if (previous.repeatedInLast(4)) {
+      previous.add(current);
+    } else {
+      break;
+    }
+  }
+
+  print('Part 1: ${previous.length}');
+  previous.clear();
+
+  for (var i = 0; i < chars.length; i++) {
+    final current = chars[i];
+    if (previous.length <= 14) {
+      previous.add(current);
+      continue;
+    }
+
+    if (previous.repeatedInLast(14)) {
+      previous.add(current);
+    } else {
+      break;
+    }
+  }
+
+  print('Part 2: ${previous.length}');
+
 }
 
 class StrategyGuide {
