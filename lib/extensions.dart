@@ -4,8 +4,9 @@ extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
 }
 
-extension ListStringExtensions on List<String> {
-  bool containsInLast(int number, String element) {
+extension ListExtension<T> on List<T> {
+
+ bool containsInLast(int number, T element) {
     final toSkip = length - number;
     final list = skip(toSkip).take(number).toList();
 
@@ -16,20 +17,17 @@ extension ListStringExtensions on List<String> {
     final toSkip = length - number;
     final list = skip(toSkip).take(number).toList();
 
-    final dupes = List.from(list);
-    for (var dupe in list.toSet().toList()) {
+    final dupes = List<T>.from(list);
+    for (final dupe in list.toSet().toList()) {
       if (dupes.contains(dupe)) {
         dupes.remove(dupe);
       }
     }
-
-    // dupes.removeWhere(
-    //   (element) => list.toSet().toList().contains(element),
-    // );
-
     return dupes.isNotEmpty;
   }
 }
+
+
 
 extension StringExtensions on String {
   int paperScissorPoint() {

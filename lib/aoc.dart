@@ -343,6 +343,24 @@ void day62022() {
   }
 
   print('Part 1: ${previous.length}');
+  previous.clear();
+
+  for (var i = 0; i < chars.length; i++) {
+    final current = chars[i];
+    if (previous.length <= 14) {
+      previous.add(current);
+      continue;
+    }
+
+    if (previous.repeatedInLast(14)) {
+      previous.add(current);
+    } else {
+      break;
+    }
+  }
+
+  print('Part 2: ${previous.length}');
+
 }
 
 class StrategyGuide {
