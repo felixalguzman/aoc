@@ -1,7 +1,34 @@
 import 'package:aoc/aoc.dart';
 
-extension ListExtensions on List<int> {
+extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
+}
+
+extension ListStringExtensions on List<String> {
+  bool containsInLast(int number, String element) {
+    final toSkip = length - number;
+    final list = skip(toSkip).take(number).toList();
+
+    return list.contains(element);
+  }
+
+  bool repeatedInLast(int number) {
+    final toSkip = length - number;
+    final list = skip(toSkip).take(number).toList();
+
+    final dupes = List.from(list);
+    for (var dupe in list.toSet().toList()) {
+      if (dupes.contains(dupe)) {
+        dupes.remove(dupe);
+      }
+    }
+
+    // dupes.removeWhere(
+    //   (element) => list.toSet().toList().contains(element),
+    // );
+
+    return dupes.isNotEmpty;
+  }
 }
 
 extension StringExtensions on String {
@@ -95,7 +122,5 @@ extension StringExtensions on String {
   }
 
   bool get isLowerCase =>
-      runes.isNotEmpty &&
-      runes.first >= 97 &&
-      runes.first <= 122;
+      runes.isNotEmpty && runes.first >= 97 && runes.first <= 122;
 }
