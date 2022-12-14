@@ -32,3 +32,26 @@ class Stack<E> {
         '\n-----------';
   }
 }
+
+class TreeNode<T> {
+  T? value;
+  final TreeNode<T>? parent;
+  final List<T> children;
+
+  TreeNode([this.value, this.parent, this.children = const []]);
+
+  void add(T child) {
+    children.add(child);
+  }
+
+  void setValue(T val) {
+    value = val;
+  }
+
+  // void forEachDepthFirst(void Function(T node) performAction) {
+  //   performAction(this);
+  //   for (final child in children) {
+  //     child.forEachDepthFirst(performAction);
+  //   }
+  // }
+}

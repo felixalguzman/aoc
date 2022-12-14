@@ -1,12 +1,15 @@
 import 'package:aoc/aoc.dart';
+import 'package:aoc/models.dart';
 
 extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
 }
+extension ListDoubleExtensions on List<double> {
+  double get sum => isEmpty ? 0 : reduce((value, element) => value + element);
+}
 
 extension ListExtension<T> on List<T> {
-
- bool containsInLast(int number, T element) {
+  bool containsInLast(int number, T element) {
     final toSkip = length - number;
     final list = skip(toSkip).take(number).toList();
 
@@ -26,8 +29,6 @@ extension ListExtension<T> on List<T> {
     return dupes.isNotEmpty;
   }
 }
-
-
 
 extension StringExtensions on String {
   int paperScissorPoint() {
@@ -121,4 +122,18 @@ extension StringExtensions on String {
 
   bool get isLowerCase =>
       runes.isNotEmpty && runes.first >= 97 && runes.first <= 122;
+
+  FileSystem? get toFileSystem {
+    final parts = split(' ').toList();
+
+    if (parts.length != 2) {
+      return null;
+    }
+
+    if (parts.first.trim() == 'dir') {
+      return FileSystem(parts.last, 0, true);
+    }
+
+    return FileSystem(parts.last, double.parse(parts.first.trim()), false);
+  }
 }

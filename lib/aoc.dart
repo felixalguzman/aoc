@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:aoc/extensions.dart';
+import 'package:aoc/models.dart';
 import 'package:aoc/utils.dart';
 
 int calculate() {
@@ -25,6 +26,9 @@ void resolve(int day, [int year = 2022]) {
       break;
     case 6:
       day62022();
+      break;
+    case 7:
+      day72022();
       break;
     default:
   }
@@ -360,13 +364,52 @@ void day62022() {
   }
 
   print('Part 2: ${previous.length}');
-
 }
 
-class StrategyGuide {
-  final bool won;
-  final int round;
-  final int points;
+void day72022() {
+  final fileContent = File('./assets/sources/2022/7.txt').readAsStringSync();
 
-  StrategyGuide({required this.round, required this.won, required this.points});
+  final lines = fileContent.split('\n').toList();
+  final tree = TreeNode<FileSystem>();
+  var previousCommand = '';
+  for (final line in lines) {
+    if (line.startsWith('\$')) {
+      var parts = line.split(' ').toList();
+      final action = parts[1].trim();
+      final location = parts.last.trim();
+
+      switch (action) {
+        case 'cd':
+          if (location == '/') {
+            previousCommand = '/';
+            continue;
+          }
+
+          if (location == '..') {
+            //todo mover en tree uno arriba
+          } else {
+            //todo mover en tree a folder
+          }
+
+          break;
+
+        case 'ls':
+          previousCommand = 'ls';
+          continue;
+      }
+    } else {
+      if (previousCommand == 'ls') {
+        final fileSystem = line.toFileSystem;
+        if (fileSystem != null) {
+
+          if (fileSystem.isDirectory) {
+            
+          }
+
+          tree.add(fileSystem);
+          continue;
+        }
+      }
+    }
+  }
 }
