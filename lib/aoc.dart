@@ -370,11 +370,12 @@ void day72022() {
   final fileContent = File('./assets/sources/2022/7.txt').readAsStringSync();
 
   final lines = fileContent.split('\n').toList();
-  final tree = TreeNode<FileSystem>();
+  final tree = TreeNode(FileSystem('/'));
+  final currentDir = <String>[];
   var previousCommand = '';
   for (final line in lines) {
     if (line.startsWith('\$')) {
-      var parts = line.split(' ').toList();
+      final parts = line.split(' ').toList();
       final action = parts[1].trim();
       final location = parts.last.trim();
 
@@ -382,13 +383,14 @@ void day72022() {
         case 'cd':
           if (location == '/') {
             previousCommand = '/';
+            currentDir.add('/');
             continue;
           }
 
           if (location == '..') {
-            //todo mover en tree uno arriba
+            currentDir.removeLast();
           } else {
-            //todo mover en tree a folder
+            currentDir.add(location);
           }
 
           break;
@@ -401,15 +403,24 @@ void day72022() {
       if (previousCommand == 'ls') {
         final fileSystem = line.toFileSystem;
         if (fileSystem != null) {
+          final treeNode = TreeNode<FileSystem>(fileSystem);
 
-          if (fileSystem.isDirectory) {
-            
+          final parent = tree.children.firstWhereOrNull(
+            (node) =>
+                (node.value?.isDirectory ?? false) &&
+                node.value?.name.trim() == currentDir.last.trim(),
+          );
+
+          if (parent != null) {
+            tree.addToNode(parent, treeNode);
+          } else {
+            tree.add(treeNode);
           }
-
-          tree.add(fileSystem);
           continue;
         }
       }
     }
   }
+
+  tree.printTree();
 }

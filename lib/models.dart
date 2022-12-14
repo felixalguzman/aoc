@@ -1,5 +1,3 @@
-import 'package:aoc/extensions.dart';
-
 class StrategyGuide {
   final bool won;
   final int round;
@@ -12,22 +10,11 @@ class FileSystem {
   final String name;
   final double size;
   final bool isDirectory;
-  final List<FileSystem> children;
 
-  FileSystem(this.name, this.size, this.isDirectory,
-      [this.children = const []]);
+  FileSystem(this.name, [this.size = 0.0, this.isDirectory = true]);
 
-  void addFileToDir(FileSystem file) {
-    if (isDirectory) {
-      children.add(file);
-    }
-  }
-
-  double get directorySize {
-    if (!isDirectory) {
-      return size;
-    }
-
-    return children.map((element) => element.directorySize).toList().sum;
+  @override
+  String toString() {
+    return '$name - $isDirectory $size';
   }
 }

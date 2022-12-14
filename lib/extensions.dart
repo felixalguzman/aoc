@@ -4,6 +4,7 @@ import 'package:aoc/models.dart';
 extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
 }
+
 extension ListDoubleExtensions on List<double> {
   double get sum => isEmpty ? 0 : reduce((value, element) => value + element);
 }
@@ -27,6 +28,13 @@ extension ListExtension<T> on List<T> {
       }
     }
     return dupes.isNotEmpty;
+  }
+
+  T? firstWhereOrNull(bool Function(T element) test) {
+    for (T element in this) {
+      if (test(element)) return element;
+    }
+    return null;
   }
 }
 
@@ -131,9 +139,10 @@ extension StringExtensions on String {
     }
 
     if (parts.first.trim() == 'dir') {
-      return FileSystem(parts.last, 0, true);
+      return FileSystem(parts.last);
     }
 
-    return FileSystem(parts.last, double.parse(parts.first.trim()), false);
+    return FileSystem(
+        parts.last.trim(), double.parse(parts.first.trim()), false);
   }
 }

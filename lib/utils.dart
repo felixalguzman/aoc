@@ -35,23 +35,67 @@ class Stack<E> {
 
 class TreeNode<T> {
   T? value;
-  final TreeNode<T>? parent;
-  final List<T> children;
+  bool currentlyVisited;
+  final List<TreeNode<T>> children = <TreeNode<T>>[];
 
-  TreeNode([this.value, this.parent, this.children = const []]);
+  TreeNode([
+    this.value,
+    this.currentlyVisited = false,
+  ]);
 
-  void add(T child) {
+  void add(TreeNode<T> child) {
+    // print('current: $runtimeType el que viene: ${child.runtimeType}');
     children.add(child);
+  }
+
+  void addToNode(TreeNode<T> old, TreeNode<T> toUpdate) {
+    if (this == old) {
+      add(toUpdate);
+      return;
+    }
+
+    for (final child in children) {
+      if (child == old) {
+        child.add(toUpdate);
+      }
+    }
   }
 
   void setValue(T val) {
     value = val;
   }
 
-  // void forEachDepthFirst(void Function(T node) performAction) {
-  //   performAction(this);
-  //   for (final child in children) {
-  //     child.forEachDepthFirst(performAction);
-  //   }
-  // }
+  void forEachDepthFirst(void Function(TreeNode<T> node) performAction) {
+    performAction(this);
+    for (final child in children) {
+      child.forEachDepthFirst(performAction);
+    }
+  }
+
+  TreeNode<T>? findNode(bool Function(TreeNode<T> node) query) {
+    final search = query(this);
+    if (search) {
+      return this;
+    }
+
+    for (final child in children) {
+      final last = child.findNode(query);
+      if (last != null) {
+        return child;
+      }
+    }
+
+    return null;
+  }
+
+  void printTree() {
+    print('Nodo: ${value?.toString()}');
+    if (children.isNotEmpty) {
+      print('Children --');
+    }
+
+    for (var child in children) {
+      child.printTree();
+    }
+  }
 }
