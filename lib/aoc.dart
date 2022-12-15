@@ -426,9 +426,8 @@ void day72022() {
 
   final nodes = tree
       .forEachDepthFirst(
-          (node) => node.value.isDirectory && node.folderSize < 100000)
+          (node) => node.value.isDirectory && node.folderSize <= 100000)
       .map((e) => e.folderSize)
-      .distinct()
       .toList();
 
   final flat = nodes.sum;
