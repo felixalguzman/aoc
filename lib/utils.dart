@@ -35,12 +35,12 @@ class Stack<E> {
 
 class TreeNode<T> {
   T? value;
-  bool currentlyVisited;
+  int level;
   final List<TreeNode<T>> children = <TreeNode<T>>[];
 
   TreeNode([
     this.value,
-    this.currentlyVisited = false,
+    this.level = 1,
   ]);
 
   void add(TreeNode<T> child) {
@@ -81,7 +81,7 @@ class TreeNode<T> {
     for (final child in children) {
       final last = child.findNode(query);
       if (last != null) {
-        return child;
+        return last;
       }
     }
 

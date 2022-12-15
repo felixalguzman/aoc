@@ -368,11 +368,11 @@ void day62022() {
 
 void day72022() {
   final fileContent = File('./assets/sources/2022/7.txt').readAsStringSync();
-
   final lines = fileContent.split('\n').toList();
-  final tree = TreeNode(FileSystem('/'));
-  final currentDir = <String>[];
+
   var previousCommand = '';
+  final currentDir = <String>[];
+  final tree = TreeNode(FileSystem('/'));
   for (final line in lines) {
     if (line.startsWith('\$')) {
       final parts = line.split(' ').toList();
@@ -385,15 +385,12 @@ void day72022() {
             previousCommand = '/';
             currentDir.add('/');
             continue;
-          }
-
-          if (location == '..') {
+          } else if (location == '..') {
             currentDir.removeLast();
           } else {
             currentDir.add(location);
           }
-
-          break;
+          continue;
 
         case 'ls':
           previousCommand = 'ls';
@@ -405,15 +402,18 @@ void day72022() {
         if (fileSystem != null) {
           final treeNode = TreeNode<FileSystem>(fileSystem);
 
-          final parent = tree.children.firstWhereOrNull(
+          final parent = tree.findNode(
             (node) =>
                 (node.value?.isDirectory ?? false) &&
                 node.value?.name.trim() == currentDir.last.trim(),
           );
 
           if (parent != null) {
+            treeNode.level = tree.level + 1;
             tree.addToNode(parent, treeNode);
           } else {
+            treeNode.level = tree.level + 1;
+
             tree.add(treeNode);
           }
           continue;
