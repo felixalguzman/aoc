@@ -1,5 +1,6 @@
 import 'package:aoc/aoc.dart';
 import 'package:aoc/models.dart';
+import 'package:aoc/utils.dart';
 
 extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
@@ -7,6 +8,34 @@ extension ListIntExtensions on List<int> {
 
 extension ListDoubleExtensions on List<double> {
   double get sum => isEmpty ? 0 : reduce((value, element) => value + element);
+}
+
+extension ListTreeNodeExtensions on TreeNode<FileSystem> {
+  double get folderSize {
+    var folder = 0.0;
+    if (!value.isDirectory) {
+      folder += value.size;
+    }
+
+    for (final child in children) {
+      final last = child.folderSize;
+      folder += last;
+    }
+
+    return folder;
+  }
+}
+
+extension IterableExt<T> on Iterable<T> {
+  List<T> distinct() {
+    final dupes = List<T>.from(this);
+    for (final dupe in toSet().toList()) {
+      if (dupes.contains(dupe)) {
+        dupes.remove(dupe);
+      }
+    }
+    return dupes;
+  }
 }
 
 extension ListExtension<T> on List<T> {

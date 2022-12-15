@@ -404,8 +404,8 @@ void day72022() {
 
           final parent = tree.findNode(
             (node) =>
-                (node.value?.isDirectory ?? false) &&
-                node.value?.name.trim() == currentDir.last.trim(),
+                (node.value.isDirectory) &&
+                node.value.name.trim() == currentDir.last.trim(),
           );
 
           if (parent != null) {
@@ -424,8 +424,13 @@ void day72022() {
 
   tree.printTree();
 
-  final nodes = tree.forEachDepthFirst(
-      (node) => node.children.isNotEmpty && (node.value!.size <= 100000));
+  final nodes = tree
+      .forEachDepthFirst(
+          (node) => node.value.isDirectory && node.folderSize < 100000)
+      .map((e) => e.folderSize)
+      .distinct()
+      .toList();
 
-      // nodes.
+  final flat = nodes.sum;
+  print('Part 1: $flat');
 }

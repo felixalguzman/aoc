@@ -1,3 +1,6 @@
+import 'package:aoc/extensions.dart';
+import 'package:aoc/models.dart';
+
 class Stack<E> {
   Stack() : _items = <E>[];
 
@@ -34,14 +37,11 @@ class Stack<E> {
 }
 
 class TreeNode<T> {
-  T? value;
+  final T value;
   int level;
   final List<TreeNode<T>> children = <TreeNode<T>>[];
 
-  TreeNode([
-    this.value,
-    this.level = 1,
-  ]);
+  TreeNode(this.value, [this.level = 1]);
 
   void add(TreeNode<T> child) {
     // print('current: $runtimeType el que viene: ${child.runtimeType}');
@@ -64,23 +64,19 @@ class TreeNode<T> {
     return false;
   }
 
-  void setValue(T val) {
-    value = val;
-  }
-
-  List<TreeNode<T>> forEachDepthFirst(
-      bool Function(TreeNode<T> node) performAction) {
-    final result = <TreeNode<T>>[];
+  Iterable<TreeNode<T>> forEachDepthFirst(
+      bool Function(TreeNode<T> node) performAction) sync* {
     final apply = performAction(this);
     if (apply) {
-      result.add(this);
+      yield this;
     }
 
     for (final child in children) {
-      child.forEachDepthFirst(performAction);
+      final added = child.forEachDepthFirst(performAction);
+      for (var element in added) {
+        yield element;
+      }
     }
-
-    return result;
   }
 
   TreeNode<T>? findNode(bool Function(TreeNode<T> node) query) {
@@ -102,7 +98,8 @@ class TreeNode<T> {
   void printTree() {
     print('${'\t' * level} Nodo: ${value?.toString()}');
     if (children.isNotEmpty) {
-      print('${'\t' * level} Nivel $level ');
+      print(
+          '${'\t' * level} Nivel $level ${(this as TreeNode<FileSystem>).folderSize}');
     }
 
     for (var child in children) {
