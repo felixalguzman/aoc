@@ -1,12 +1,45 @@
 import 'package:aoc/aoc.dart';
+import 'package:aoc/models.dart';
+import 'package:aoc/utils.dart';
 
 extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);
 }
 
-extension ListExtension<T> on List<T> {
+extension ListDoubleExtensions on List<double> {
+  double get sum => isEmpty ? 0 : reduce((value, element) => value + element);
+}
 
- bool containsInLast(int number, T element) {
+extension ListTreeNodeExtensions on TreeNode<FileSystem> {
+  double get folderSize {
+    var folder = 0.0;
+    if (!value.isDirectory) {
+      folder += value.size;
+    }
+
+    for (final child in children) {
+      final last = child.folderSize;
+      folder += last;
+    }
+
+    return folder;
+  }
+}
+
+extension IterableExt<T> on Iterable<T> {
+  List<T> distinct() {
+    final dupes = List<T>.from(this);
+    for (final dupe in toSet().toList()) {
+      if (dupes.contains(dupe)) {
+        dupes.remove(dupe);
+      }
+    }
+    return dupes;
+  }
+}
+
+extension ListExtension<T> on List<T> {
+  bool containsInLast(int number, T element) {
     final toSkip = length - number;
     final list = skip(toSkip).take(number).toList();
 
@@ -25,9 +58,14 @@ extension ListExtension<T> on List<T> {
     }
     return dupes.isNotEmpty;
   }
+
+  T? firstWhereOrNull(bool Function(T element) test) {
+    for (T element in this) {
+      if (test(element)) return element;
+    }
+    return null;
+  }
 }
-
-
 
 extension StringExtensions on String {
   int paperScissorPoint() {
@@ -121,4 +159,19 @@ extension StringExtensions on String {
 
   bool get isLowerCase =>
       runes.isNotEmpty && runes.first >= 97 && runes.first <= 122;
+
+  FileSystem? get toFileSystem {
+    final parts = split(' ').toList();
+
+    if (parts.length != 2) {
+      return null;
+    }
+
+    if (parts.first.trim() == 'dir') {
+      return FileSystem(parts.last);
+    }
+
+    return FileSystem(
+        parts.last.trim(), double.parse(parts.first.trim()), false);
+  }
 }

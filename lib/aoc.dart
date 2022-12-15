@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:aoc/extensions.dart';
+import 'package:aoc/models.dart';
 import 'package:aoc/utils.dart';
 
 int calculate() {
@@ -25,6 +26,9 @@ void resolve(int day, [int year = 2022]) {
       break;
     case 6:
       day62022();
+      break;
+    case 7:
+      day72022();
       break;
     default:
   }
@@ -360,13 +364,72 @@ void day62022() {
   }
 
   print('Part 2: ${previous.length}');
-
 }
 
-class StrategyGuide {
-  final bool won;
-  final int round;
-  final int points;
+void day72022() {
+  final fileContent = File('./assets/sources/2022/7.txt').readAsStringSync();
+  final lines = fileContent.split('\n').toList();
 
-  StrategyGuide({required this.round, required this.won, required this.points});
+  var previousCommand = '';
+  final currentDir = <String>[];
+  final tree = TreeNode(FileSystem('/'));
+  for (final line in lines) {
+    if (line.startsWith('\$')) {
+      final parts = line.split(' ').toList();
+      final action = parts[1].trim();
+      final location = parts.last.trim();
+
+      switch (action) {
+        case 'cd':
+          if (location == '/') {
+            previousCommand = '/';
+            currentDir.add('/');
+            continue;
+          } else if (location == '..') {
+            currentDir.removeLast();
+          } else {
+            currentDir.add(location);
+          }
+          continue;
+
+        case 'ls':
+          previousCommand = 'ls';
+          continue;
+      }
+    } else {
+      if (previousCommand == 'ls') {
+        final fileSystem = line.toFileSystem;
+        if (fileSystem != null) {
+          final treeNode = TreeNode<FileSystem>(fileSystem);
+
+          final parent = tree.findNode(
+            (node) =>
+                (node.value.isDirectory) &&
+                node.value.name.trim() == currentDir.last.trim(),
+          );
+
+          if (parent != null) {
+            treeNode.level = parent.level + 1;
+            tree.addToNode(parent, treeNode);
+          } else {
+            treeNode.level = tree.level + 1;
+
+            tree.add(treeNode);
+          }
+          continue;
+        }
+      }
+    }
+  }
+
+  tree.printTree();
+
+  final nodes = tree
+      .forEachDepthFirst(
+          (node) => node.value.isDirectory && node.folderSize <= 100000)
+      .map((e) => e.folderSize)
+      .toList();
+
+  final flat = nodes.sum;
+  print('Part 1: $flat');
 }
