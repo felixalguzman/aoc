@@ -409,7 +409,7 @@ void day72022() {
           );
 
           if (parent != null) {
-            treeNode.level = tree.level + 1;
+            treeNode.level = parent.level + 1;
             tree.addToNode(parent, treeNode);
           } else {
             treeNode.level = tree.level + 1;
@@ -423,4 +423,9 @@ void day72022() {
   }
 
   tree.printTree();
+
+  final nodes = tree.forEachDepthFirst(
+      (node) => node.children.isNotEmpty && (node.value!.size <= 100000));
+
+      // nodes.
 }

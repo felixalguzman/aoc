@@ -48,28 +48,39 @@ class TreeNode<T> {
     children.add(child);
   }
 
-  void addToNode(TreeNode<T> old, TreeNode<T> toUpdate) {
+  bool addToNode(TreeNode<T> old, TreeNode<T> toUpdate) {
     if (this == old) {
       add(toUpdate);
-      return;
+      return true;
     }
 
     for (final child in children) {
-      if (child == old) {
-        child.add(toUpdate);
+      final added = child.addToNode(old, toUpdate);
+      if (added) {
+        return true;
       }
     }
+
+    return false;
   }
 
   void setValue(T val) {
     value = val;
   }
 
-  void forEachDepthFirst(void Function(TreeNode<T> node) performAction) {
-    performAction(this);
+  List<TreeNode<T>> forEachDepthFirst(
+      bool Function(TreeNode<T> node) performAction) {
+    final result = <TreeNode<T>>[];
+    final apply = performAction(this);
+    if (apply) {
+      result.add(this);
+    }
+
     for (final child in children) {
       child.forEachDepthFirst(performAction);
     }
+
+    return result;
   }
 
   TreeNode<T>? findNode(bool Function(TreeNode<T> node) query) {
@@ -89,9 +100,9 @@ class TreeNode<T> {
   }
 
   void printTree() {
-    print('Nodo: ${value?.toString()}');
+    print('${'\t' * level} Nodo: ${value?.toString()}');
     if (children.isNotEmpty) {
-      print('Children --');
+      print('${'\t' * level} Nivel $level ');
     }
 
     for (var child in children) {
