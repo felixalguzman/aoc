@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:aoc/extensions.dart';
-import 'package:aoc/utils.dart';
+import 'extensions.dart';
+import 'utils.dart';
 
 int calculate() {
   return 6 * 7;

@@ -1,4 +1,4 @@
-import 'package:aoc/aoc.dart';
+import 'aoc.dart';
 
 extension ListIntExtensions on List<int> {
   int get sum => isEmpty ? 0 : reduce((value, element) => value + element);

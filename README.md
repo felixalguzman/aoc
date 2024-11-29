@@ -1,2 +1,10 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+
+# Advent of Code 
+
+## Solutions for the Advent of Code
+
+### 2022 - Dart
+
+### 2023 - Swift
+
+### 2024 - C
