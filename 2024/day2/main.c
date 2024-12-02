@@ -53,6 +53,41 @@ bool is_safe(int arr[], int length)
   return safe;
 }
 
+int *copy_array(int arr[], int length, int index_to_skip)
+{
+  // Allocate new array
+  int *result = malloc((length - 1) * sizeof(int));
+
+  // Copy non-excluded values
+  int j = 0;
+  for (int i = 0; i < length; i++)
+  {
+    if (i != index_to_skip)
+    {
+      result[j] = arr[i];
+      j++;
+    }
+  }
+
+  return result;
+}
+
+bool is_safe_skiping(int arr[], int length)
+{
+  bool safe = false;
+  for (int i = 0; i < length; i++)
+  {
+    int *copy = copy_array(arr, length, i);
+    if (is_safe(copy, length - 1))
+    {
+      safe = true;
+      break;
+    }
+    free(copy);
+  }
+
+  return safe;
+}
 int main(int argc, char const *argv[])
 {
   char line[1024];
@@ -63,7 +98,8 @@ int main(int argc, char const *argv[])
     return 1;
   }
 
-  int count = 0;
+  int safeReports = 0;
+  int safeReportsSkiping = 0;
   while (fgets(line, sizeof(line), input) != NULL)
   {
     char *copy = strdup(line);
@@ -81,13 +117,20 @@ int main(int argc, char const *argv[])
 
     if (is_safe(reportLine, index))
     {
-      count++;
+      safeReports++;
     }
+    else if (is_safe_skiping(reportLine, index))
+    {
+      safeReportsSkiping++;
+    }
+
     free(copy);
   }
 
   fclose(input);
 
-  printf("Total safe: %d\n", count);
+  printf("Total safe: %d\n", safeReports);
+  printf("Total safe skipping: %d\n", safeReportsSkiping);
+  printf("Total safe reports: %d\n", safeReports + safeReportsSkiping);
   return 0;
 }
