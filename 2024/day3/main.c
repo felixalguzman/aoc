@@ -37,7 +37,7 @@ int multiplyFromPosition(char *line, int position)
   char *splitted = strtok(numbers, ",");
   printf("numbers 1: %s\n", splitted);
   int first = atoi(splitted);
-  if (first == 0)
+  if (first == 0 || first > 999)
   {
     return -1;
   }
@@ -45,7 +45,7 @@ int multiplyFromPosition(char *line, int position)
   splitted = strtok(NULL, ",");
   printf("numbers 2: %s\n", splitted);
   int second = atoi(splitted);
-  if (second == 0)
+  if (second == 0 || second > 999)
   {
     return -1;
   }
