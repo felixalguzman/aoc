@@ -28,12 +28,22 @@ int multiplyFromPosition(char *line, int position)
     }
   }
 
-  printf("Numbers: %s\n", numbers);
+  char *splitted = strtok(numbers, ",");
+  int first = atoi(splitted);
+
+  splitted = strtok(NULL, ",");
+  int second = atoi(splitted);
+
+  result = first * second;
+
+  printf("Numbers: %s\n Result: %d\n", numbers, result);
   return result;
 }
 
 int main(int argc, char const *argv[])
 {
+  int sequenceLength = strlen(startSequence);
+
   char line[1024];
   input = fopen("input.txt", "r");
   if (input == NULL)
@@ -57,8 +67,12 @@ int main(int argc, char const *argv[])
       {
         total += valid;
       }
-      char *next = strstr(copy, startSequence + pendingMult);
-      pos = pos != NULL ? pos - copy : -1;
+      const char *nextPos = startSequence + pendingMult;
+      char *temp = strdup(copy);
+      strcpy(temp, copy + pendingMult + sequenceLength);
+      char *next = strstr(temp, startSequence);
+      pendingMult = next != NULL ? next - temp : -1;
+      copy = temp;
     } while (pendingMult != -1);
   }
 
