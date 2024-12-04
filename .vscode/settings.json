@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.gsp": "html",
+    "*.js": "javascript",
+    "string.h": "c"
+  }
+}
