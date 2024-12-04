@@ -12,7 +12,7 @@ int multiplyFromPosition(char *line, int position)
   int result = -1;
 
   char *start = line + position + strlen(startSequence);
-  char numbers[1024];
+  char numbers[8] = "";
   for (int i = 0; i < 8; i++)
   {
     char element = start[i];
@@ -23,20 +23,34 @@ int multiplyFromPosition(char *line, int position)
 
     if ((element >= '0' && element <= '9') || element == ',')
     {
-      char temp[2] = {element, '\0'};
-      strcat(numbers, temp);
+      int currentNumbersLength = strlen(numbers);
+      numbers[currentNumbersLength] = element;
+    }
+    else
+    {
+      return -1;
     }
   }
 
+  printf("numbers joined: %s\n", numbers);
+
   char *splitted = strtok(numbers, ",");
+  printf("numbers 1: %s\n", splitted);
   int first = atoi(splitted);
+  if (first == 0)
+  {
+    return -1;
+  }
 
   splitted = strtok(NULL, ",");
+  printf("numbers 2: %s\n", splitted);
   int second = atoi(splitted);
+  if (second == 0)
+  {
+    return -1;
+  }
 
   result = first * second;
-
-  printf("Numbers: %s\n Result: %d\n", numbers, result);
   return result;
 }
 
@@ -61,18 +75,18 @@ int main(int argc, char const *argv[])
 
     do
     {
-
       int valid = multiplyFromPosition(copy, pendingMult);
       if (valid != -1)
       {
         total += valid;
       }
-      const char *nextPos = startSequence + pendingMult;
-      char *temp = strdup(copy);
+
+      char temp[sizeof(line)];
       strcpy(temp, copy + pendingMult + sequenceLength);
       char *next = strstr(temp, startSequence);
       pendingMult = next != NULL ? next - temp : -1;
       copy = temp;
+
     } while (pendingMult != -1);
   }
 
